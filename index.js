@@ -1,6 +1,5 @@
 var Benchmark = require('benchmark');
 var tb = require('travis-benchmark');
-var beauty = require('beautify-benchmark');
 var _ = require('lodash');
 var async = require('async');
 var foreach = require('foreach');
@@ -71,17 +70,7 @@ async.timesSeries(
       });
     });
 
-    suite.on('cycle', function (event) { beauty.add(event.target); });
-    suite.on('complete', function(event) {
-      beauty.log();
-      tb.saveSuite(
-        tb.parseSuite(event),
-        function(error) {
-          next();
-        }
-      );
-    });
-
+    tb.wrapSuite(suite);
     suite.run({ async: true });
   }
 );
