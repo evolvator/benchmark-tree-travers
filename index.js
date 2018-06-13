@@ -42,7 +42,7 @@ async.timesSeries(
         value;
       });
     });
-    suite.add('lodash@1.0.1 forEach', function() {
+    suite.add('lodash@4.17.10 forEach', function() {
       _.forEach(array, function(value, index) {
         value;
       });
@@ -64,7 +64,7 @@ async.timesSeries(
         value;
       });
     });
-    suite.add('array-each@1.0.0', function() {
+    suite.add('array-each@1.0.1', function() {
       arrayEach(array, function(value, index) {
         value;
       });
