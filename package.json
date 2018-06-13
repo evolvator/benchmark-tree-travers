@@ -10,6 +10,6 @@
     "benchmark": "^2.1.4",
     "foreach": "^2.0.5",
     "lodash": "^4.17.10",
-    "travis-benchmark": "^0.0.5"
+    "travis-benchmark": "^0.0.6"
   }
 }
