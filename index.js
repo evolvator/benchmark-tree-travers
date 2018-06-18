@@ -72,5 +72,7 @@ async.timesSeries(
 
     tb.wrapSuite(suite);
     suite.run({ async: true });
+    
+    next();
   }
 );
