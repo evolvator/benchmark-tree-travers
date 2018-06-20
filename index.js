@@ -70,7 +70,7 @@ async.timesSeries(
       });
     });
 
-    tb.wrapSuite(suite);
+    tb.wrapSuite(suite, () => next());
     suite.run({ async: true });
   }
 );
