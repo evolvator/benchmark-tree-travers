@@ -23,8 +23,8 @@ async.timesSeries(
     suite.add('while', function() {
       var i = 0;
       while (i < count) {
-        i++;
         array[i];
+        i++;
       }
     });
     suite.add('for-in', function() {
