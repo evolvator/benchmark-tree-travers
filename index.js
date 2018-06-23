@@ -24,7 +24,7 @@ async.timesSeries(
   function(t, next) {
     var count = Math.pow(2, t);
     var tree = generateTree({}, count, 5);
-    var suite = new Benchmark.Suite(`tree depth: ${count}, width: 10, factor: 0.25`);
+    var suite = new Benchmark.Suite(`tree depth: ${count}, width: 5`);
     
     function recursiveTraverse(current, handler) {
       handler(current);
