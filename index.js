@@ -22,9 +22,8 @@ var arrayEach = require('array-each');
 async.timesSeries(
   5,
   function(t, next) {
-    var count = Math.pow(2, t);
-    var tree = generateTree({}, count, 5);
-    var suite = new Benchmark.Suite(`tree depth: ${count}, width: 5`);
+    var tree = generateTree({}, t + 1, 5);
+    var suite = new Benchmark.Suite(`tree depth: ${t + 1}, width: 5`);
     
     function recursiveTraverse(current, handler) {
       handler(current);
