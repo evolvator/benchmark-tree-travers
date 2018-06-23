@@ -1,73 +1,73 @@
 var Benchmark = require('benchmark');
 var tb = require('travis-benchmark');
 var _ = require('lodash');
+var Chance = require('chance');
+var chance = new Chance();
+
+function generateTree(current, depth, width) {
+    if (depth) {
+        for (var i = 0; i < width; i++) {
+            var key = chance.word();
+            current[key] = {};
+            generateTree(current[key], depth - 1, width);
+        }
+    }
+    return current;
+}
+
 var async = require('async');
 var foreach = require('foreach');
 var arrayEach = require('array-each');
 
 async.timesSeries(
-  15,
+  5,
   function(t, next) {
     var count = Math.pow(2, t);
-    var suite = new Benchmark.Suite(`${count} array.length`);
-
-    var array = _.times(count, function(t) {
-      return t;
-    });
-
-    suite.add('for', function() {
-      for (var i = 0; i < count; i++) {
-        array[i];
-      };
-    });
-    suite.add('while', function() {
-      var i = 0;
-      while (i < count) {
-        array[i];
-        i++;
+    var tree = generateTree({}, count, 5);
+    var suite = new Benchmark.Suite(`tree depth: ${count}, width: 10, factor: 0.25`);
+    
+    function recursiveTraverse(current, handler) {
+      handler(current);
+      // fastest based on https://github.com/evolvator/benchmark-each-by-object
+      if (typeof(current) === 'object') {
+        if (Array.isArray(current)) {
+          for (var i = 0; i < current.length; i++) {
+            recursiveTraverse(current[i], handler);
+          };
+        } else {
+          var array = Object.keys(current);
+          for (var i = 0; i < array.length; i++) {
+            recursiveTraverse(current[array[i]], handler);
+          };
+        }
       }
+    };
+    
+    suite.add('recursive', function() {
+      recursiveTraverse(tree, function(current) {});
     });
-    suite.add('for-in', function() {
-      for (var i in array) {
-        array[i];
+    
+    function stackTraverse(current, handler) {
+      var stack = [{ data: current, index: -1, keys: typeof(current) === 'object' && !Array.isArray(current) ? Object.keys(current) : undefined }];
+      while (stack.length) {
+        var pointer = stack[stack.length - 1];
+        if (pointer.index === -1) handler(pointer, stack);
+        pointer.index++;
+        if (typeof(pointer.data) === 'object') {
+          var key = pointer.keys ? pointer.keys[pointer.index] : pointer.index;
+          if (pointer.data.hasOwnProperty(pointer.keys[pointer.index])) {
+            stack.push({ data: pointer.data[key], index: -1, key: key, keys: typeof(pointer.data[key]) === 'object' && !Array.isArray(pointer.data[key]) ? Object.keys(pointer.data[key]) : undefined });
+          } else {
+            stack.pop();
+          }
+        } else {
+          stack.pop();
+        }
       }
-    });
-    suite.add('for-of', function() {
-      for (var f of array) {
-        f;
-      }
-    });
-    suite.add('forEach', function() {
-      array.forEach(function(value, index) {
-        value;
-      });
-    });
-    suite.add('lodash@4.17.10 forEach', function() {
-      _.forEach(array, function(value, index) {
-        value;
-      });
-    });
-    suite.add('async@2.6.1 forEachOf', function() {
-      async.forEachOf(array, function(value, index, next) {
-        value;
-        next();
-      });
-    });
-    suite.add('async@2.6.1 forEachOfSeries', function() {
-      async.forEachOfSeries(array, function(value, index, next) {
-        value;
-        next();
-      });
-    });
-    suite.add('foreach@2.0.5', function() {
-      foreach(array, function(value, index) {
-        value;
-      });
-    });
-    suite.add('array-each@1.0.1', function() {
-      arrayEach(array, function(value, index) {
-        value;
-      });
+    };
+    
+    suite.add('stack', function() {
+      stackTraverse(tree, function(current) {});
     });
 
     tb.wrapSuite(suite, () => next());
