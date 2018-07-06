@@ -11,6 +11,6 @@
     "chance": "^1.0.16",
     "foreach": "^2.0.5",
     "lodash": "^4.17.10",
-    "travis-benchmark": "^0.0.6"
+    "travis-benchmark": "^0.1.0"
   }
 }
