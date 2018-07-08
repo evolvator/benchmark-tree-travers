@@ -2,7 +2,7 @@
 
 What's the fastest way to traveres tree?
 
-[![Build Status](https://travis-ci.org/evolvator/benchmark-tree-travers.svg?branch=master)](https://travis-ci.org/evolvator/benchmark-tree-travers)
+[![Build Status](https://travis-ci.org/evolvator/benchmark-tree-travers.svg?branch=code)](https://travis-ci.org/evolvator/benchmark-tree-travers)
 
 [Executable code](https://github.com/evolvator/benchmark-tree-travers/tree/code)
 
