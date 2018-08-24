@@ -19,7 +19,7 @@ var async = require('async');
 var foreach = require('foreach');
 var arrayEach = require('array-each');
 
-false && async.timesSeries(
+async.timesSeries(
   5,
   function(t, next) {
     var tree = generateTree({}, t + 1, 5);
